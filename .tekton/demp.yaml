@@ -3,8 +3,8 @@ kind: PipelineRun
 metadata:
   name: maven-build
 annotations:
-  pipelinesascode.tekton.dev/on-event: "[pull_request, push]"
-  pipelinesascode.tekton.dev/on-target-branch: "[main, demo]"
+  pipelinesascode.tekton.dev/on-event: "[push]"
+  pipelinesascode.tekton.dev/on-target-branch: "[demo]"
   pipelinesascode.tekton.dev/cancel-in-progress: "true"
 spec:
   pipelineSpec:
