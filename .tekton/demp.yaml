@@ -1,1 +1,37 @@
-# f
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: maven-build
+annotations:
+  pipelinesascode.tekton.dev/on-event: "[pull_request]"
+  pipelinesascode.tekton.dev/on-target-branch: "[main, demo]"
+  pipelinesascode.tekton.dev/cancel-in-progress: "true"
+spec:
+  pipelineSpec:
+    workspaces:
+    - name: shared-workspace
+    tasks:
+      - name: fetch-repo
+        taskRef:
+          - name: git-clone
+        params:
+        - name: url
+          value: {{ repo_url }}
+        - name: revision
+          value: {{ revision }}
+        workspaces:
+        - name: output
+          workspace: shared-workspace
+      - name: build-from-source
+        taskRef:
+          resolver: cluster
+          params:
+          - name: kind
+            value: task
+          - name: name
+            value: maven
+          - name: namespace
+            value: openshift-pipelines
+        workspaces:
+        - name: source
+          workspace: shared-workspace
